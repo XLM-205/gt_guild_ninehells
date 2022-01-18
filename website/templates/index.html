@@ -1,0 +1,11 @@
+{% extends "base_layout.html" %}
+
+{% block content %}
+  <h1 class="title">Logged on as {{ data['name'] }}</h1>
+  <h2 class="subtitle">Website in development! Please wait!</h2>
+  <h3 class="subtitle">Your Total Damage is {{ data['total_damage'] }} in {{ data['attendances'] }} RAIDs. Breakdown:</h3>
+  {% for raid in data['raid_data'] %}
+    <h4>{{ raid[6] }} ({{ raid[5] }}º) {{ raid[7] }} - Total Damage: {{ '{:,}'.format(raid[4]) }} (AVG: {{ '{:,}'.format(raid[3]) }})</h4>
+    <h5>You did {{ '{:,}'.format(raid[2]) }} damage</h5>
+  {% endfor %}
+{% endblock %}
