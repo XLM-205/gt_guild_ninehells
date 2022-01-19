@@ -1,0 +1,41 @@
+{% extends "base_layout.html" %}
+
+{% block content %}
+  {% if data['event_exists'] %}
+    <h1 class="title">Details of the {{ data['event_type'] }}: {{ data['event_name'] }}</h1>
+    <h2 class="subtitle">Event ended on {{ data['event_date'] }}{% if data['event_rank_matters'] %} and we finished on <b>{{ data['event_pos'] }}º rank</b> {% endif %}</h2>
+  {% endif %}
+  <div class="card">
+    <div class="{% if data['event_exists'] %} bg-info {% else %} bg-danger {% endif %} card-header">
+      <div class="card-title">
+        <div class="">
+          {% if data['event_exists'] %}
+            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }}</h3>
+            <p>Average Damage: {{ '{:,}'.format(data['event_avg']) }}</p>
+          {% else %}
+            <h5>Event data doesn't exists!</h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  {% if data['event_exists'] %}
+    <div class="card-body">
+        {% for member in data['event_data'] %}
+          {% if data['user_name'] == member[0] %}
+            <div class="bg-success callout callout-success">
+              <h5>{{ loop.index }}º {{ member[0] }} (That's you!)</h5>
+          {% elif member[1] > 0 %}
+            <div class="callout callout-success">
+              <h5>{{ loop.index }}º {{ member[0] }}</h5>
+          {% else %}
+            <div class="callout callout-danger">
+              <h5>{{ loop.index }}º {{ member[0] }}</h5>
+          {% endif %}
+              <p>Damage: {{ '{:,}'.format(member[1]) }}</p>
+            </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+  </div>
+{% endblock %}

@@ -17,6 +17,8 @@ defaults = {"CONSOLE": {"SERVER_BOOT": "white",  # Console Color code for each m
             "SECURITY": {"INJ_GUARD": {"CASES": ["--", "\')", ");"],         # If any is found in the query, reject
                                        "GROUPS": [["\'", ")"], [")", ";"]],  # If found in the order, reject
                                        "REPLACES": [["\'", "´"], ]}},        # If [0] is found, replace to [1]
+            "LOGIN": {"MAX_TRIES": 5,      # Maximum amount of wrong guesses before locking the login
+                      "LOCKOUT": 3600},
             "FALLBACK": {"PORT": 5000,      # Default port
                          "DB_URL": None},   # Default Database URL
             "REQUEST": {"TIMEOUT": 3},      # Time, in seconds, before a GET request is ignored
@@ -45,7 +47,7 @@ def print_verbose(sender: str, message: str, color: str = None, bold: bool = Fal
         printer_color = None
         if color is not None:
             printer_color = color
-        elif sender in defaults["INTERFACE"]["CONSOLE"]:
+        elif sender in defaults["CONSOLE"]:
             # noinspection PyTypeChecker
             printer_color = defaults["CONSOLE"][sender]
         print_rich(f"[{datetime.now().strftime('%H:%M:%S.%f')}][{sender}] {message}",

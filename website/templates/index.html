@@ -1,11 +1,54 @@
 {% extends "base_layout.html" %}
 
 {% block content %}
-  <h1 class="title">Logged on as {{ data['name'] }}</h1>
+  <h1 class="title">Welcome, {{ data['user_name'] }}!</h1>
   <h2 class="subtitle">Website in development! Please wait!</h2>
-  <h3 class="subtitle">Your Total Damage is {{ data['total_damage'] }} in {{ data['attendances'] }} RAIDs. Breakdown:</h3>
-  {% for raid in data['raid_data'] %}
-    <h4>{{ raid[6] }} ({{ raid[5] }}º) {{ raid[7] }} - Total Damage: {{ '{:,}'.format(raid[4]) }} (AVG: {{ '{:,}'.format(raid[3]) }})</h4>
-    <h5>You did {{ '{:,}'.format(raid[2]) }} damage</h5>
-  {% endfor %}
+  {% if data['data_exists'] %}
+    <!-- If user have data -->
+    <h3 class="subtitle">Your Total Damage is <b>{{ data['total_damage'] }} in {{ data['raid_attendances'] }} Raids</b> (and attended <b>{{ data['mine_attendances'] }} mining operations</b>). Breakdown:</h3>
+    {% for event in data['event_data'] %}
+      <div class="card">
+          <div class="card-header {% if event[2] == 1%}bg-info{% else %}bg-success{% endif %}" style="display: block">
+            <h3 class="card-title">
+                {% if event[2] == 1%}
+                  {{ event[7] }}, Raid - {{ event[6] }}º ({{ event[8] }})
+                {% else %}
+                  {{ event[7] }}, Mining Operations ({{ event[8] }})
+                {% endif %}
+            </h3>
+            <div class="card-tools">
+              <a href="/details/{{ event[1] }}">
+                <span class="badge badge-primary">Details</span>
+              </a>
+            </div>
+          </div>
+
+        <div class="card-body">
+          <div class="callout callout-success">
+            <h5>Total Guild Damage: {{ '{:,}'.format(event[5]) }}</h5>
+            <p>Average Guild Damage: {{ '{:,}'.format(event[4]) }}</p>
+          </div>
+          <div class="bg-info callout callout-info">
+            You did <b>{{ '{:,}'.format(event[3]) }} damage</b>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <!-- User doesn't have data -->
+    <div class="card">
+        <div class="bg-warning card-header">
+          <div class="card-title">
+            <h5>Oops! Looks like someone is new here! (Welcome btw!)</h5>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="callout callout-success">
+            <h5>Just keep it up and soon there will be some data to display here ;)</h5>
+          </div>
+        </div>
+      </div>
+  {% endif %}
 {% endblock %}

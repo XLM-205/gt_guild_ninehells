@@ -8,8 +8,19 @@ logger_session = requests.Session()
 # Logger credentials
 log_cred = {"user": defaults["INTERNAL"]["WEB_NAME"], "webpass": None}
 # Logger host
-log_host = defaults["LOGGER"]["PROVIDER"]
+log_host: str
 logged_in = False
+
+
+def init_log_service(webpass: str, url: str):
+    global log_host, log_cred
+    if webpass is not None and (url is not None and url != ""):
+        log_cred["webpass"] = webpass
+        log_host = url
+        logger_login()
+    else:
+        print_verbose(sender=__name__, message="Logger Password or URL is missing! Log service disabled", color="red")
+        website_config["USE_LOGGER"] = False
 
 
 def log_success(comment="Not Specified", body=None):
@@ -60,11 +71,23 @@ def log_clear(comment="Not Specified"):
 
 
 # noinspection PyBroadException
-def log_request(endpoint: str = None, json=None, post=False):
-    if website_config["USE_LOGGER"] is False and (logged_in is False and defaults["LOGGER"]["REQUIRE_LOGIN"]):
-        return  # Ignore this log request since the logger is disabled by the user
+def log_request(endpoint: str = None, json=None, post: bool = False, log_in_out: bool = False):
+    """
+    Makes a request to the logging server provider
+    :param endpoint: [Required] The endpoint this request goes to, always prefixed with the 'log_host' URL
+    :param json: (Optional) JSON body to be sent with the request
+    :param post: (Optional) Defines if the request is a POST or a GET (Default is GET / False)
+    :param log_in_out: (Optional) If True, the request will be treated as if it's a login / logout request, as in it
+    bypasses the checks if the server is logged in or not
+    :return: The request returned from the log server provider. If it's None, then probably something went wrong with
+    the request / connection / logging provider
+    """
+    if log_in_out is False:
+        if website_config["USE_LOGGER"] is False and (logged_in is False and defaults["LOGGER"]["REQUIRE_LOGIN"]):
+            return None  # Ignore this log request since the logger is disabled by the user
     if endpoint is None or endpoint == "":
         print_verbose(sender=__name__, message="Empty request ignored", color="yellow")
+        return None
     req = None
     try:
         if post:
@@ -93,12 +116,14 @@ def logger_login():
         if req.status_code == 200:
             print_verbose(sender=__name__, message="Login Successful", color="green")
             logged_in = True
+            return
         else:
             print_verbose(sender=__name__, message=f"Login Failed with code {req.status_code}", color="red")
             logged_in = False
     else:
         print_verbose(sender=__name__, message=f"Login Failed (No response)", color="red", underline=True)
         logged_in = False
+    print_verbose(sender=__name__, message=f"Logging Service disabled", color="red", underline=True)
 
 
 def flood_test(amount: int, batches: int = 4):

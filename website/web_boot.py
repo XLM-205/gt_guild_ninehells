@@ -5,16 +5,11 @@ import os
 
 import routes
 from models import Membro, db
-from log_services import log_cred, log_success, logger_login
-from web_config import print_verbose, website_config
+from log_services import init_log_service, log_success
+from web_config import print_verbose, defaults
 
 
 # Functions ------------------------------------------------------------------------------------------------------------
-def init_logger():
-    logger_login()
-    log_success("Initialization successful!")
-
-
 def create_app():
     db_uri = os.environ.get("DATABASE_URL", "")
     # Fixing deprecated convention Heroku still uses
@@ -28,16 +23,13 @@ def create_app():
         # db_uri = os.environ.get("LOCAL_DB_URL", "")
         # log_services.log_warning(f"Using Database at {db_uri.split('/')[-1]}", body=log_services.config)
 
+    # Initialize and login into the logger service
+    # init_log_service(os.environ.get("LKEY", None), os.environ.get("LOGGER_URL", defaults["LOGGER"]["PROVIDER"]))
+    init_log_service(os.environ.get("LKEY", None), os.environ.get("LOGGER_URL", "https://-1"))
+
     # For encrypting passwords during execution
     try:
-        # log_cred["webpass"] = os.environ["LKEY"]
-        log_cred["webpass"] = os.environ.get("LKEY", 0)
-    except KeyError:
-        print_verbose(sender=__name__, message="Logger Password is missing! Log service disabled", color="red")
-        website_config["USE_LOGGER"] = False
-    try:
-        # app.config["SECRET_KEY"] = os.environ["SKEY"]
-        app.config["SECRET_KEY"] = os.environ.get("SKEY", 0)
+        app.config["SECRET_KEY"] = os.environ["SKEY"]
     except KeyError:
         print_verbose(sender=__name__, message="Secret Key is missing!", color="red", underline=True)
         os.abort()
@@ -64,5 +56,5 @@ def create_app():
         # print_verbose(sender=__name__, message=db_msg)
         # logger_config["POST_INIT"].append((log_internal, ("Attention", db_msg)))
         # logger_config["LOGIN"] = False  # If we don't have a database, we can't login
-
+    log_success("Guild Website initialization complete! Starting WSGI Server...")
     return app

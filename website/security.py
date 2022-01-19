@@ -102,7 +102,7 @@ def attempt_login(log_in, wp, ip_address, remember=False):
                 login_attempts[ip_address][1] = False
                 user = make_login(log_in, wp)
             else:
-                print_verbose(sender=__name__,
+                print_verbose(sender=__name__, color="red",
                               message=f"IP {ip_address} is still locked until {login_attempts[ip_address][2]}")
                 # return redirect(url_for("auth.login"))
                 return locked
@@ -120,12 +120,12 @@ def attempt_login(log_in, wp, ip_address, remember=False):
                 log_attention(comment=f"IP {ip_address} is locked until {login_attempts[ip_address][2]}"
                                       f" (Too many failed attempts)")
             flash("Invalid Login")
-            print_verbose(sender=__name__,
+            print_verbose(sender=__name__, color="yellow",
                           message=f"IP {ip_address} failed to login (Attempt {login_attempts[ip_address][0]})")
             # return redirect(url_for("auth.login"))
             return failed
     except (TypeError, KeyError) as exc:
-        print_verbose(sender=__name__,
+        print_verbose(sender=__name__, color="red",
                       message=f"Login exception trying to login user {log_in} with pass {wp}: '{str(exc)}'")
         return bad_request
     except Exception as exc:
@@ -134,5 +134,5 @@ def attempt_login(log_in, wp, ip_address, remember=False):
     login_attempts[ip_address][0] = 0
     login_attempts[ip_address][1] = False
     login_user(user, remember=remember)
-    log_success(comment=f"{flask_login.current_user.name} ({ip_address}) logged in successfully")
+    log_success(comment=f"{flask_login.current_user.nome} ({ip_address}) logged in successfully")
     return success
