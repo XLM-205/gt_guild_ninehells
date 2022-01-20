@@ -54,7 +54,7 @@ def dashboard():
         "raid_attendances": attendances[0],
         "mine_attendances": attendances[1],
         "event_data": event_details,
-        "data_exists": True if event_details[0] is not None and event_details[0] != [] else False,
+        "data_exists": True if event_details != [] else False,
     }
     return render_template("index.html", data=data)
 

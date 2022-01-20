@@ -38,9 +38,14 @@ def query_total_damage_of(identifier: int, event_id: id):
     :param identifier: User's ID
     :param event_id: Event's ID
     :return: A Tuple that contains (<User total damage for the giving event>, <Total events attended>)
+    or (0, 0) if there are no entries
     """
     cmd = text(f"SELECT * FROM GetTotalDamage({identifier}, {event_id});")
-    return db.session.execute(cmd).first()
+    damage_data = db.session.execute(cmd).first()
+    if damage_data is None or damage_data == ():
+        return 0, 0
+    else:
+        return damage_data
 
 
 def query_events_detailed_user(user_id: int):
@@ -50,9 +55,14 @@ def query_events_detailed_user(user_id: int):
     :return: A Tuple that contains
     (0- User ID, 1- Event ID, 2- Event type, 3- User damage, 4- average damage,
     5- total damage, 6- rank position, 7- event's name, 8- when the event ended) in chronological order (newest first)
+    or an empty list if there are no entries
     """
     cmd = text(f"SELECT * FROM GetAllEventsDetailed WHERE id_membro = {user_id} ORDER BY id_evento DESC;")
-    return db.session.execute(cmd).all()
+    event_data = db.session.execute(cmd).all()
+    if event_data is None or event_data == []:
+        return []
+    else:
+        return event_data
 
 
 def query_events_detailed(event_id: int):
