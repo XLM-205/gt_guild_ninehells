@@ -55,6 +55,7 @@ def query_events_detailed_user(user_id: int):
     :return: A Tuple that contains
     (0- User ID, 1- Event ID, 2- Event type, 3- User damage, 4- average damage,
     5- total damage, 6- rank position, 7- event's name, 8- when the event ended) in chronological order (newest first)
+    (filtering that, if a Null is found, it's replaced with 0)
     or an empty list if there are no entries
     """
     cmd = text(f"SELECT * FROM GetAllEventsDetailed WHERE id_membro = {user_id} ORDER BY id_evento DESC;")
@@ -62,7 +63,14 @@ def query_events_detailed_user(user_id: int):
     if event_data is None or event_data == []:
         return []
     else:
-        return event_data
+        for i in range(len(event_data)):
+            check_replace = []
+            for entry in event_data[i]:
+                if entry is None:
+                    entry = 0
+                check_replace.append(entry)
+            event_data[i] = tuple(check_replace)
+            return event_data
 
 
 def query_events_detailed(event_id: int):
@@ -82,6 +90,15 @@ def query_events_detailed(event_id: int):
     raid_data = db.session.execute(cmd).all()
     if raid_data is None or raid_data == []:
         return [], 0, 0, 0, "Event doesn't exist", "--/--/----", unk_event
+    # Filtering against null values
+    for i in range(len(raid_data)):
+        check_replace = []
+        for entry in raid_data[i]:
+            if entry is None:
+                entry = 0
+            check_replace.append(entry)
+        raid_data[i] = tuple(check_replace)
+
     for entry in raid_data:
         out.append((entry[0], entry[4]))
     if 0 < entry[3] <= len(event_types):
