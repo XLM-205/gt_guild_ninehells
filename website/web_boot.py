@@ -5,8 +5,8 @@ import os
 
 import routes
 from models import Membro, db
-from log_services import init_log_service, log_success
-from web_config import print_verbose, defaults
+from log_services import init_log_service, log_success, log_critical
+from web_config import print_verbose
 
 
 # Functions ------------------------------------------------------------------------------------------------------------
@@ -50,11 +50,8 @@ def create_app():
     if db_uri is not None and db_uri != "":
         db.init_app(app)
 
-    # else:   # No database! Aborting...
-        # todo Treat no database exception
-        # db_msg = "Log Server running WITHOUT Database support"
-        # print_verbose(sender=__name__, message=db_msg)
-        # logger_config["POST_INIT"].append((log_internal, ("Attention", db_msg)))
-        # logger_config["LOGIN"] = False  # If we don't have a database, we can't login
+    else:   # No database! Aborting...
+        log_critical(comment="No database detected, aborting startup...")
+        os.abort()
     log_success("Guild Website initialization complete! Starting WSGI Server...")
     return app

@@ -3,7 +3,7 @@ import os
 from web_boot import create_app
 from web_config import website_config, defaults, print_verbose
 from log_services import logger_logout
-from signal_manager.manager import SignalManager
+# from signal_manager.manager import SignalManager
 
 
 def sigterm_catcher():
@@ -27,10 +27,10 @@ def sigfpe_catcher():
 
 
 def set_config():
-    SignalManager.set_callback("SIGTERM", sigterm_catcher)
-    SignalManager.set_callback("SIGINT", sigint_catcher)
-    SignalManager.set_callback("SIGABRT", sigabrt_catcher)
-    SignalManager.set_callback("SIGFPE", sigfpe_catcher)
+    # SignalManager.set_callback("SIGTERM", sigterm_catcher)
+    # SignalManager.set_callback("SIGINT", sigint_catcher)
+    # SignalManager.set_callback("SIGABRT", sigabrt_catcher)
+    # SignalManager.set_callback("SIGFPE", sigfpe_catcher)
     website_config["VERBOSE"] = True
 
 

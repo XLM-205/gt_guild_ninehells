@@ -1,54 +1,185 @@
 {% extends "base_layout.html" %}
 
 {% block content %}
-  <h1 class="title">Welcome, {{ data['user_name'] }}!</h1>
-  <h2 class="subtitle">Website in development! Please wait!</h2>
-  {% if data['data_exists'] %}
-    <!-- If user have data -->
-    <h3 class="subtitle">Your Total Damage is <b>{{ data['total_damage'] }} in {{ data['raid_attendances'] }} Raids</b> (and attended <b>{{ data['mine_attendances'] }} mining operations</b>). Breakdown:</h3>
-    {% for event in data['event_data'] %}
-      <div class="card">
-          <div class="card-header {% if event[2] == 1%}bg-info{% else %}bg-success{% endif %}" style="display: block">
-            <h3 class="card-title">
-                {% if event[2] == 1%}
-                  {{ event[7] }}, Raid - {{ event[6] }}º ({{ event[8] }})
-                {% else %}
-                  {{ event[7] }}, Mining Operations ({{ event[8] }})
-                {% endif %}
-            </h3>
-            <div class="card-tools">
-              <a href="/details/{{ event[1] }}">
-                <span class="badge badge-primary">Details</span>
-              </a>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h1 class="title">Welcome, {{ data['user_name'] }}!</h1>
+<h2 class="subtitle">Website in development! Please wait!</h2>
+<h3 class="subtitle">Your Total Damage is <b>{{ data['total_damage'] }} in {{ data['raid_attendances'] }} Raids</b> (and attended <b>{{ data['mine_attendances'] }} mining operations</b>)</h3>
+
+<div class="card">
+    <div class="card-header bg-secondary">
+        <h3 class="card-title">{{ data['user_name'] }}'s Improvement</h3>
+    </div>
+
+    <div class="card-body"> <!-- GRAPH AREA -->
+        <canvas id="line-chart-member-progress" height="100">
+            <script>
+                var context = document.getElementById("line-chart-member-progress").getContext("2d")
+                var lineChart = new Chart(context, {
+                    type: "line",
+                    data: {
+                        labels: {{ data['progress_user']['labels'] | safe }},
+                        datasets: [
+                            {
+                                label: "{{ data['user_name'] }} Raid Damage",
+                                data: {{ data['progress_user']['values'] | safe }},
+                                fill: true,
+                                borderColor: "rgb(0, 170, 20)",
+                                lineTension: 0.5,
+                            },
+                            {
+                                label: "Guild's Average",
+                                data: {{ data['progress_user']['avg'] | safe }},
+                                borderColor: "rgb(255, 127, 0)",
+                                lineTension: 0.5,
+                            }
+                        ]
+                    }
+                });
+            </script>
+        </canvas>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-success">
+        <h3 class="card-title">Raids</h3>
+    </div>
+    <div class="card-body">
+
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title">Guild Improvement</h3>
             </div>
-          </div>
-
-        <div class="card-body">
-          <div class="callout callout-success">
-            <h5>Total Guild Damage: {{ '{:,}'.format(event[5]) }}</h5>
-            <p>Average Guild Damage: {{ '{:,}'.format(event[4]) }}</p>
-          </div>
-          <div class="bg-info callout callout-info">
-            You did <b>{{ '{:,}'.format(event[3]) }} damage</b>
-          </div>
+            <div class="card-body"> <!-- GRAPH AREA -->
+               <canvas id="line-chart-guild-progress" height="100">
+                    <script>
+                        var context = document.getElementById("line-chart-guild-progress").getContext("2d")
+                        var lineChart = new Chart(context, {
+                            type: "line",
+                            data: {
+                                labels: {{ data['progress_guild']['labels'] | safe }},
+                                datasets: [
+                                    {
+                                        label: "Guild's Raid Damage",
+                                        data: {{ data['progress_guild']['values'] | safe }},
+                                        fill: true,
+                                        borderColor: "rgb(0, 170, 20)",
+                                        lineTension: 0.5,
+                                    },
+                                    {
+                                        label: "Guild's Average",
+                                        data: {{ data['progress_guild']['avg'] | safe }},
+                                        borderColor: "rgb(255, 127, 0)",
+                                        lineTension: 0.5,
+                                    }
+                                ]
+                            }
+                        });
+                    </script>
+                </canvas>
+            </div>
         </div>
-      </div>
-    {% endfor %}
 
-  {% else %}
-    <!-- User doesn't have data -->
-    <div class="card">
-        <div class="bg-warning card-header">
-          <div class="card-title">
-            <h5>Oops! Looks like someone is new here! (Welcome btw!)</h5>
-          </div>
+        {% if data['raid_data'] %}
+        {% for raid in data['raid_data'] %}
+        <div class="card card-success card-outline">
+            <div class="card-header" style="display: block">
+                <h3 class="card-title">
+                    {{ raid[7] }} - {{ raid[6] }}º ({{ raid[8] }})
+                </h3>
+                <div class="card-tools">
+                    <a href="/details/{{ raid[1] }}">
+                        <button type="button" class="btn btn-block btn-outline-primary">
+                            Details
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="callout callout-success">
+                    <h5>Total Guild Damage: {{ '{:,}'.format(raid[5]) }}</h5>
+                    <p>Average Guild Damage: {{ '{:,}'.format(raid[4]) }}</p>
+                </div>
+                <div class="{% if raid[9] >= 0 %}bg-success callout-success{% else %} bg-warning callout-warning{% endif %} callout ">
+                    You did <b>{{ '{:,}'.format(raid[3]) }} damage</b> ({% if raid[9] >= 0 %}+{% endif %}{{ '{:,}'.format(raid[9]) }})
+                </div>
+            </div>
         </div>
+        {% endfor %}
 
-        <div class="card-body">
-          <div class="callout callout-success">
-            <h5>Just keep it up and soon there will be some data to display here ;)</h5>
-          </div>
+        {% else %}
+        <!-- No Raid Data -->
+        <div class="card">
+            <div class="bg-warning card-header">
+                <div class="card-title">
+                    <h5>Oops! Looks like someone is new here! (Welcome btw!)</h5>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="callout callout-success">
+                    <h5>Just keep it up and soon there will be some raid data to display here ;)</h5>
+                </div>
+            </div>
         </div>
-      </div>
-  {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header bg-info">
+        <h3 class="card-title">Mining Operations / Meteor Excavation</h3>
+    </div>
+
+    <div class="card-body">
+        {% if data['mine_data']%}
+        {% for mine in data['mine_data'] %}
+        <div class="card card-info card-outline">
+            <div class="card-header" style="display: block">
+                <h3 class="card-title">
+                    {{ mine[7] }} ({{ mine[8] }})
+                </h3>
+                <div class="card-tools">
+                    <a href="/details/{{ mine[1] }}">
+                        <button type="button" class="btn btn-block btn-outline-primary">
+                            Details
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="callout callout-success">
+                    <h5>Total Guild Damage: {{ '{:,}'.format(mine[5]) }}</h5>
+                    <p>Average Guild Damage: {{ '{:,}'.format(mine[4]) }}</p>
+                </div>
+                <div class="bg-info callout callout-info">
+                    You did <b>{{ '{:,}'.format(mine[3]) }} damage</b>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <!-- No Mine Data -->
+        <div class="card">
+            <div class="bg-warning card-header">
+                <div class="card-title">
+                    <h5>Oops! Looks like someone is new here! (Welcome btw!)</h5>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="callout callout-success">
+                    <h5>Just keep it up and soon there will be some mining data to display here ;)</h5>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
