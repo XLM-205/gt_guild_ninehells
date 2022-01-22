@@ -30,11 +30,10 @@
                         labels: {{ data['distribution']['labels'] | safe }},
                         datasets: [
                             {
-                                label: "Raid Damage Distribution",
+                                label: "Damage Distribution",
                                 data: {{ data['distribution']['values'] | safe }},
                                 fill: true,
                                 borderColor: "rgb(0, 170, 20)",
-                                lineTension: 0.5,
                             },
                         ]
                     },
@@ -50,14 +49,14 @@
     <div class="{% if data['event_exists'] %} bg-info {% else %} bg-danger {% endif %} card-header" style="display: block">
       <div class="card-title">
           {% if data['event_exists'] %}
-            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }} ({% if data['event_dif'][1] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][1]) }} )</h3>
-            <p>Average Damage: {{ '{:,}'.format(data['event_avg']) }} ({% if data['event_dif'][2] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][2]) }} )</p>
+            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }} <br>({% if data['event_dif'][1] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][1]) }} )</br></h3>
+            <p>Average Damage: {{ '{:,}'.format(data['event_avg']) }} <br>({% if data['event_dif'][2] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][2]) }} )</br></p>
           {% else %}
             <h5>Event data doesn't exists!</h5>
           {% endif %}
       </div>
       <div class="card-tools">
-        <a href="/dashboard">
+        <a href="{{ url_for('main.dashboard')}}">
           <button type="button" class="btn btn-block btn-default">Return</button>
         </a>
       </div>
@@ -74,7 +73,7 @@
             <div class="callout callout-success">
               <h5>{{ loop.index }}º {{ member[0] }}</h5>
           {% else %}
-            <div class="callout callout-danger">
+            <div class="callout callout-warning">
               <h5>{{ loop.index }}º {{ member[0] }}</h5>
           {% endif %}
               <p>Damage: {{ '{:,}'.format(member[1]) }}</p>

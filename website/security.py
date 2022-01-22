@@ -6,10 +6,11 @@ from flask import flash
 from flask_login import login_user
 
 from models import Membro
-from web_config import defaults, print_verbose
-from log_services import log_critical, log_attention, log_success
+from web_config import defaults
+from log_services import log_critical, log_attention, log_success, log_error, log_warning
 
 # Holds all ips that tried to connect "{IP}": [tries: int, locked: bool, lock_until: datetime]
+# TODO A way for Gunicorn share this across all workers
 login_attempts = {}
 
 
@@ -50,12 +51,12 @@ def injection_guard(queries: []):
             query.replace(replace[0], replace[1])
 
 
-def make_login(log_in, wp):
+def make_login(log_in, wp) -> (Membro, str):
     """
     Tries to login, verifying first against SQL Injection attempts
     :param log_in: The login credentials (username / server url)
     :param wp: The WebPassword
-    :return: An Users object, if successful, and None if doesn't
+    :return: An Users object, if successful, and None if doesn't, followed by the reason:
     """
     # noinspection PyUnresolvedReferences
     try:
@@ -66,14 +67,18 @@ def make_login(log_in, wp):
         log_critical(comment=f"SQL Injection Attempt identified from {flask.request.remote_addr} !",
                      body={"log_in": log_in, "wp": wp})
         flash("Login information had invalid characters")
-        return None
+        return None, "Forbidden characters"
     except (sqlalchemy.exc.NoSuchColumnError, AttributeError, TypeError):
-        flash("Invalid Login Attempt")
-        return None
+        flash("Invalid Credentials")
+        return None, "Invalid Credentials"
     except Exception as exc:
         log_critical(comment=f"Uncaught exception trying to make login\n{str(exc)}")
-        return None
-    return user
+        return None, f"Log-in Uncaught Exception"
+
+    if user is None:
+        return None, "Invalid Credentials"
+    else:
+        return user, "Success"
 
 
 def attempt_login(log_in, wp, ip_address, remember=False):
@@ -87,6 +92,7 @@ def attempt_login(log_in, wp, ip_address, remember=False):
     200 for a successful login, 401 for a failed one and 403 if locked
     """
     # Safeguarding against brute force
+    global login_attempts
     success = 200
     bad_request = 400
     failed = 401
@@ -95,20 +101,21 @@ def attempt_login(log_in, wp, ip_address, remember=False):
         if ip_address in login_attempts:     # User is known
             if login_attempts[ip_address][1] is False:
                 # User not locked. Attempt login
-                user = make_login(log_in, wp)
+                user, reason = make_login(log_in, wp)
             elif login_attempts[ip_address][2] <= datetime.now():
                 # User is locked, but his lock have expired
+
                 login_attempts[ip_address][0] = 0
                 login_attempts[ip_address][1] = False
-                user = make_login(log_in, wp)
+                user, reason = make_login(log_in, wp)
             else:
-                print_verbose(sender=__name__, color="red",
-                              message=f"IP {ip_address} is still locked until {login_attempts[ip_address][2]}")
-                # return redirect(url_for("auth.login"))
+                # User is still locked, log this attempt and abort
+                log_attention(comment=f"IP {ip_address} tried to log in while locked. "
+                                      f"Lock down ends {login_attempts[ip_address][2]}")
                 return locked
         else:   # User is unknown
             login_attempts[ip_address] = [0, False, None]
-            user = make_login(log_in, wp)
+            user, reason = make_login(log_in, wp)
 
         # Attempting login
         if user is None:
@@ -120,13 +127,11 @@ def attempt_login(log_in, wp, ip_address, remember=False):
                 log_attention(comment=f"IP {ip_address} is locked until {login_attempts[ip_address][2]}"
                                       f" (Too many failed attempts)")
             flash("Invalid Login")
-            print_verbose(sender=__name__, color="yellow",
-                          message=f"IP {ip_address} failed to login (Attempt {login_attempts[ip_address][0]})")
-            # return redirect(url_for("auth.login"))
+            log_warning(comment=f"IP {ip_address} failed to login with with name '{log_in}' ({reason}) "
+                                f"(Attempt {login_attempts[ip_address][0]})")
             return failed
     except (TypeError, KeyError) as exc:
-        print_verbose(sender=__name__, color="red",
-                      message=f"Login exception trying to login user {log_in} with pass {wp}: '{str(exc)}'")
+        log_error(comment=f"Login exception trying to login user '{log_in}': {str(exc)})")
         return bad_request
     except Exception as exc:
         log_critical(comment=f"Uncaught exception trying to make login\n{str(exc)}")

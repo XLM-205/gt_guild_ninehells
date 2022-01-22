@@ -71,7 +71,8 @@ def log_clear(comment="Not Specified"):
 
 
 # noinspection PyBroadException
-def log_request(endpoint: str = None, json=None, post: bool = False, log_in_out: bool = False):
+def log_request(endpoint: str = None, json=None, post: bool = False, log_in_out: bool = False,
+                timeout: int = defaults["REQUEST"]["TIMEOUT"]):
     """
     Makes a request to the logging server provider
     :param endpoint: [Required] The endpoint this request goes to, always prefixed with the 'log_host' URL
@@ -79,6 +80,8 @@ def log_request(endpoint: str = None, json=None, post: bool = False, log_in_out:
     :param post: (Optional) Defines if the request is a POST or a GET (Default is GET / False)
     :param log_in_out: (Optional) If True, the request will be treated as if it's a login / logout request, as in it
     bypasses the checks if the server is logged in or not
+    :param timeout: (Optional) Timeout, in seconds, to abort the current request.
+    Defaults to defaults["REQUEST"]["TIMEOUT"]
     :return: The request returned from the log server provider. If it's None, then probably something went wrong with
     the request / connection / logging provider
     """
@@ -91,9 +94,9 @@ def log_request(endpoint: str = None, json=None, post: bool = False, log_in_out:
     req = None
     try:
         if post:
-            req = logger_session.post(log_host + endpoint, json=json, timeout=defaults["REQUEST"]["TIMEOUT"])
+            req = logger_session.post(log_host + endpoint, json=json, timeout=timeout)
         else:
-            req = logger_session.get(log_host + endpoint, json=json, timeout=defaults["REQUEST"]["TIMEOUT"])
+            req = logger_session.get(log_host + endpoint, json=json, timeout=timeout)
         if req is None:
             print_verbose(sender=__name__, message=f"Request timed out\n\t> '{json}'", color="red", bold=True)
     except Exception as exc:
@@ -108,7 +111,8 @@ def log_request_async(endpoint: str = None, json=None, post=False):
 def logger_login():
     global logged_in
     if defaults["LOGGER"]["REQUIRE_LOGIN"]:
-        req = log_request("/cli/login", json=log_cred, post=True)
+        print_verbose(sender=__name__, message=f"Attempting login to Log Server...", color="yellow")
+        req = log_request("/cli/login", json=log_cred, post=True, timeout=10)   # Giving extra time to wake the server
     else:
         print_verbose(sender=__name__, message=f"Logger doesn't require a login (Aborted)", color="yellow")
         return
@@ -147,4 +151,7 @@ def flood_test(amount: int, batches: int = 4):
 
 
 def logger_logout():
+    global logged_in
     log_request("/logout")
+    logged_in = False
+    print_verbose(sender=__name__, message=f"Logged out from Log Server", color="yellow")

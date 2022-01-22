@@ -5,7 +5,7 @@ import os
 
 import routes
 from models import Membro, db
-from log_services import init_log_service, log_success, log_critical
+from log_services import init_log_service, log_critical
 from web_config import print_verbose
 
 
@@ -53,5 +53,5 @@ def create_app():
     else:   # No database! Aborting...
         log_critical(comment="No database detected, aborting startup...")
         os.abort()
-    log_success("Guild Website initialization complete! Starting WSGI Server...")
+    print_verbose(sender="WEB_BOOT", color="green", message="Initialization complete!")
     return app

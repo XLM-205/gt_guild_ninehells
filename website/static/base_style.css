@@ -1,3 +1,8 @@
+.root{
+    --nav-bg-default: rgba(51, 51, 51, 1);
+    --accent-color: #03b6fc;
+}
+
 body {
 	margin: 0;
 	font-size: 18px;
@@ -7,14 +12,24 @@ body {
 }
 
 #log_info_table {
-	background: rgb(51,51,51);
+	background: var(--var-bg-default);
 }
 
-#navbar {
-	background-color: #333;
+.nav_bar {
+	background-color: var(--var-bg-default);
 }
 
-#navbar a, p {
+.base_grad {
+    color: #FFF
+    background: rgb(0,160,255);
+    background: linear-gradient(0deg, rgba(0,160,255,1) 0%, rgba(0,65,255,1) 85%, rgba(51, 51, 51, 1) 100%);
+}
+
+.title, .subtitle{
+    color: #FFF
+}
+
+.nav_bar > a {
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
@@ -25,43 +40,43 @@ body {
 	margin-inline-end: 0px;
 }
 
-#navbar a.right_nav, p.right_nav {
+.nav_bar > a.right_nav/*, p.right_nav*/ {
 	color: #f2f2f2;
 	float: right;
 }
 
-#navbar a.update_auto {
+.nav_bar a.update_auto {
 	color: #f2f2f2;
-	background-color: #03b6fc;
+	background-color: var(--accent-color);
 	float: left;
 }
 
-#navbar a.update_me {
+.nav_bar a.update_me {
 	color: #f2f2f2;
 	background-color: #f70;
 	float: right;
 }
 
-#navbar a.common_nav, p.common_nav, .dropbtn {
+.nav_bar > a.common_nav /*,p.common_nav, .dropbtn*/ {
 	color: #f2f2f2;
 	float: left;
 }
 
-#navbar a:hover, .dropbtn:hover {
+.nav_bar a:hover, .dropbtn:hover {
 	background-color: #ddd;
 	color: black;
 }
 
-#navbar a.active, p.active {
+.nav_bar > a.active {
 	float: left;
-	background-color: #03b6fc;	/*accent color */
+	background-color: var(--accent-color);	/*accent color */
 	color: white;
 }
 
-#navbar p.disabled_nav {
+/*.nav_bar > p.disabled_nav {
 	float: left;
 	color: black;
-}
+}*/
 
 .nav_dropdown {
 	float: left;
@@ -125,12 +140,12 @@ td {
 }
 
 td.internal {
-    background-color: #03b6fc;	/*accent color */
+    background-color: var(--accent-color);	/*accent color */
 }
 
 th {
 	color: #f2f2f2;
-	background-color: #03b6fc;
+	background-color: var(--accent-color);
 }
 
 .sev_success {

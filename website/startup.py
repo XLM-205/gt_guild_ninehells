@@ -2,7 +2,6 @@ import os
 
 from web_boot import create_app
 from web_config import website_config, defaults, print_verbose
-from log_services import logger_logout
 # from signal_manager.manager import SignalManager
 
 
@@ -41,7 +40,6 @@ def main():
     port = int(os.environ.get("PORT", defaults["FALLBACK"]["PORT"]))
     app = create_app()
     app.run(host=host, port=port, use_reloader=False)
-    logger_logout()
 
 
 if __name__ == "__main__":
@@ -49,4 +47,3 @@ if __name__ == "__main__":
 else:
     set_config()
     app = create_app()
-    logger_logout()

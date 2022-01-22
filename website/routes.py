@@ -21,11 +21,11 @@ def index():
 @login_required
 def detailed(event_id):
     raid_details = query_event_detailed(event_id)
-    # .strftime("%m/%b/%Y")
     dist_labels = []
     dist_values = []
     user_label = 0
     user_value = 0
+    rank_matters = True
     if not raid_details[0]:
         exists = False
     else:
@@ -45,11 +45,13 @@ def detailed(event_id):
                 if member[1] <= dist:
                     count += 1
                     continue_from += 1
-                    # dist_avg.append(raid_details[1])
                 else:
                     break
+
             dist_values.append(count)
-            if raid_details[6] == "RAID":
+        # Filing the labels
+        if raid_details[6] == "RAID":
+            for dist in labels:
                 if dist > 1000000000:
                     dist_labels.append(f"{int(dist / 1000000000)}B")
                 elif dist > 1000000:
@@ -58,11 +60,13 @@ def detailed(event_id):
                     dist_labels.append(f"{int(dist / 1000)}K")
                 else:
                     dist_labels.append(dist)
-            else:
+        else:
+            rank_matters = False
+            for dist in labels:
                 dist_labels.append(dist)
     data = {
         "user_name": current_user.nome,
-        "event_rank_matters": True if raid_details[6] == "RAID" else False,
+        "event_rank_matters": rank_matters,
         "event_exists": exists,
         "event_data": raid_details[0],
         "event_avg": raid_details[1],

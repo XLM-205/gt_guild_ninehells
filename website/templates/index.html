@@ -22,17 +22,17 @@
                         labels: {{ data['progress_user']['labels'] | safe }},
                         datasets: [
                             {
-                                label: "{{ data['user_name'] }} Raid Damage",
+                                label: "Your Damage",
                                 data: {{ data['progress_user']['values'] | safe }},
                                 fill: true,
                                 borderColor: "rgb(0, 170, 20)",
-                                lineTension: 0.5,
+                                lineTension: 0.1,
                             },
                             {
                                 label: "Guild's Average",
                                 data: {{ data['progress_user']['avg'] | safe }},
                                 borderColor: "rgb(255, 127, 0)",
-                                lineTension: 0.5,
+                                lineTension: 0.1,
                             }
                         ]
                     }
@@ -62,17 +62,16 @@
                                 labels: {{ data['progress_guild']['labels'] | safe }},
                                 datasets: [
                                     {
-                                        label: "Guild's Raid Damage",
+                                        label: "Guild's Damage",
                                         data: {{ data['progress_guild']['values'] | safe }},
                                         fill: true,
                                         borderColor: "rgb(0, 170, 20)",
-                                        lineTension: 0.5,
                                     },
                                     {
                                         label: "Guild's Average",
                                         data: {{ data['progress_guild']['avg'] | safe }},
                                         borderColor: "rgb(255, 127, 0)",
-                                        lineTension: 0.5,
+
                                     }
                                 ]
                             }
@@ -90,7 +89,7 @@
                     {{ raid[7] }} - {{ raid[6] }}º ({{ raid[8] }})
                 </h3>
                 <div class="card-tools">
-                    <a href="/details/{{ raid[1] }}">
+                    <a href="{{ url_for('main.detailed', event_id=raid[1]) }}">
                         <button type="button" class="btn btn-block btn-outline-primary">
                             Details
                         </button>
@@ -144,7 +143,7 @@
                     {{ mine[7] }} ({{ mine[8] }})
                 </h3>
                 <div class="card-tools">
-                    <a href="/details/{{ mine[1] }}">
+                    <a href="{{ url_for('main.detailed', event_id=mine[1]) }}">
                         <button type="button" class="btn btn-block btn-outline-primary">
                             Details
                         </button>

@@ -1,17 +1,18 @@
 from setuptools import setup
+from website.web_config import defaults
 
 setup(
     name="guild_docker",
-    version="0.1.0",
+    version=defaults["INTERNAL"]["VERSION"],
     author="Ramon Darwich de Menezes",
-    description="Manages the Guild Database",
+    description="Manages the Guild Database under a website",
     license="GNU",
     install_requires=["flask", "flask-sqlalchemy", "flask-login", "requests",
-                      "werkzeug", "sqlalchemy", "flask-sslify"],
+                      "werkzeug", "sqlalchemy", "flask-sslify", "gunicorn"],
     entry_points={
         "console_scripts": [
             # <Nome do Comando>=<Modulo (Arquivo)>:<Funcao>
-            "run_webpage=server_boot:create_app"
+            "run_webpage=startup:main"
         ]
     }
 )
