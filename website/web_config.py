@@ -25,7 +25,7 @@ defaults = {"CONSOLE": {"SERVER_BOOT": "white",  # Console Color code for each m
             "REQUEST": {"TIMEOUT": 3},      # Time, in seconds, before a GET request is ignored
             "LOGGER": {"PROVIDER": "https://rdm-gen-logserver.herokuapp.com/",  # Logger url
                        "REQUIRE_LOGIN": True},                                  # The logger require a valid login?
-            "INTERNAL": {"VERSION": "0.8.0",    # Server's Version
+            "INTERNAL": {"VERSION": "0.8.1",    # Server's Version
                          "ACCESS_POINT": "http://gt-ninehells-guild.herokuapp.com/",  # Website's url
                          "WEB_NAME": "GT Guild Webpage"}}    # Website's name internally and on entries
 

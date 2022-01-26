@@ -27,12 +27,15 @@ class Membro(UserMixin, db.Model):
 
     def fetch_total_raid_damage(self):
         return query_total_damage_of(self.id, 1)
+        # return query_total_damage_of(99, 1)
 
     def fetch_event_detailed(self):
         return query_events_detailed_user(self.id)
+        # return query_events_detailed_user(99)
 
     def fetch_event_last_difference(self, reference_event_id: int):
         return query_event_last_difference_user(self.id, reference_event_id)
+        # return query_event_last_difference_user(99, reference_event_id)
 
 
 def query_total_damage_of(identifier: int, event_id: id):
@@ -57,7 +60,8 @@ def query_events_detailed_user(user_id: int):
     :param user_id: User's ID
     :return: A Tuple that contains on [0]- Raid details, [1] - Mining details. Each entry have
     (0- User ID, 1- Event ID, 2- Event type, 3- User damage, 4- average damage, 5- total damage, 6- rank position,
-    7- event's name, 8- when the event ended, 9- User's Damage difference from last) in order of newest first
+    7- event's name, 8- when the event ended, 9- User's Damage difference from last, 10- Guild's Damage Proportion,
+    11- User's Damage Proportion) in order of newest first
     (filtering that, if a Null is found, it's replaced with 0)
     or a list with two empty lists inside if there are no entries
     """
@@ -82,7 +86,14 @@ def query_events_detailed_user(user_id: int):
                 if event_data[j][2] == this_type:
                     dif_damage = this_damage - event_data[j][3]
                     break
-            check_replace.append(dif_damage)
+            # Additional values
+            check_replace.append(dif_damage)    # User's damage difference
+            if check_replace[5] == 0:           # Preventing a division by 0
+                check_replace.append(0.0)
+                check_replace.append(0.0)
+            else:
+                check_replace.append(round((check_replace[5] - check_replace[3]) / check_replace[5] * 100, 1))
+                check_replace.append(round(check_replace[3] / check_replace[5] * 100, 1))
             event_data[i] = tuple(check_replace)
             events[event_data[i][2] - 1].append(event_data[i])
         return events

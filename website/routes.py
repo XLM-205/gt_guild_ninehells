@@ -17,6 +17,13 @@ def index():
     return redirect(url_for('main.dashboard'))
 
 
+@main.route("/profile", methods=['GET'])
+@login_required
+def profile():
+    return redirect(url_for('main.dashboard'))
+    # todo: Implement profile page for sending requests and changing web-password
+
+
 @main.route("/details/<int:event_id>", methods=['GET'])
 @login_required
 def detailed(event_id):
@@ -79,7 +86,7 @@ def detailed(event_id):
         "distribution": {"labels": dist_labels, "values": dist_values,
                          "user_label": user_label, "user_value": user_value},
     }
-    return render_template("detailed.html", data=data)
+    return render_template("detailed.html", data=data), 200
 
 
 @main.route("/dashboard", methods=['GET'])
@@ -87,6 +94,7 @@ def detailed(event_id):
 def dashboard():
     total_raid_dmg = 0
     event_details = current_user.fetch_event_detailed()
+    # todo: Limit to the last 5 entries (when we have enough data for it)
     guild_raid_details = query_progression_guild()[::-1]
     attendances = [len(event_details[0]), len(event_details[1])]
     user_labels = []
@@ -97,6 +105,7 @@ def dashboard():
     guild_values = [val[2] for val in guild_raid_details[:-1]]
     guild_avg = [val[3] for val in guild_raid_details[:-1]]
     guild_names = [val[8] for val in guild_raid_details[:-1]]
+    guild_total = sum(guild_values)
     for raids in event_details[0][::-1]:
         total_raid_dmg += raids[3]
         user_labels.append(raids[8].strftime("%m/%b/%Y"))
@@ -105,21 +114,24 @@ def dashboard():
         user_values.append(raids[3])
     data = {
         "user_name": current_user.nome,
-        "total_damage": f"{total_raid_dmg:,}",
+        "total_damage": total_raid_dmg,
         "raid_attendances": attendances[0],
         "mine_attendances": attendances[1],
         "raid_data": event_details[0],
         "mine_data": event_details[1],
-        "progress_guild": {"labels": guild_labels, "values": guild_values, "avg": guild_avg, "names": guild_names},
-        "progress_user": {"labels": user_labels, "values": user_values, "avg": user_avg, "names": user_names},
+        "progress_guild": {"labels": guild_labels, "values": guild_values, "avg": guild_avg, "names": guild_names,
+                           "total": guild_total},
+        "progress_user": {"labels": user_labels, "values": user_values, "avg": user_avg, "names": user_names,
+                          "percent_guild": round((guild_total - total_raid_dmg) / guild_total * 100, 1),
+                          "percent_self": round(total_raid_dmg / guild_total * 100, 1)},
     }
-    return render_template("index.html", data=data)
+    return render_template("index.html", data=data), 200
 
 
 # Routes > Authentication ----------------------------------------------------------------------------------------------
 @auth.route("/login", methods=['GET'])
 def login():
-    return render_template("login.html")
+    return render_template("login.html"), 200
 
 
 @auth.route("/login", methods=["POST"])

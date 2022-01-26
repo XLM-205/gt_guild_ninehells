@@ -9,8 +9,8 @@
       Event ended on {{ data['event_date'] }}
       {% if data['event_rank_matters'] %} and we finished on
         <b>{{ data['event_pos'] }}º rank</b>
-        {% if data['event_dif'][0] > 0 %} (▲ {{ data['event_dif'][0] }} )
-        {% elif data['event_dif'][0] < 0 %} (▼ {{ data['event_dif'][0] }} )
+        {% if data['event_dif'][0] > 0 %} (<b class="accented-bold-good">▲ {{ data['event_dif'][0] }} </b>)
+        {% elif data['event_dif'][0] < 0 %} (<b class="accented-bold-bad">▼ {{ data['event_dif'][0] }} </b>)
         {% endif %}
       {% endif %}
     </h2>

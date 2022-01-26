@@ -1,6 +1,7 @@
-.root{
-    --nav-bg-default: rgba(51, 51, 51, 1);
-    --accent-color: #03b6fc;
+:root{
+    --nav-bg-default: #333333;
+    --accent-color-good: #03b6fc;
+    --accent-color-bad: #C00;
 }
 
 body {
@@ -16,7 +17,15 @@ body {
 }
 
 .nav_bar {
-	background-color: var(--var-bg-default);
+	background-color: var(--nav-bg-default);
+}
+
+.accented-bold-good {
+    color: var(--accent-color-good);
+}
+
+.accented-bold-bad {
+    color: var(--accent-color-bad);
 }
 
 .base_grad {
