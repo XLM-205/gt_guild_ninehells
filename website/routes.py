@@ -94,17 +94,16 @@ def detailed(event_id):
 def dashboard():
     total_raid_dmg = 0
     event_details = current_user.fetch_event_detailed()
-    # todo: Limit to the last 5 entries (when we have enough data for it)
     guild_raid_details = query_progression_guild()[::-1]
     attendances = [len(event_details[0]), len(event_details[1])]
     user_labels = []
     user_values = []
     user_avg = []
     user_names = []
-    guild_labels = [val[6].strftime("%m/%b/%Y") for val in guild_raid_details[:-1]]
-    guild_values = [val[2] for val in guild_raid_details[:-1]]
-    guild_avg = [val[3] for val in guild_raid_details[:-1]]
-    guild_names = [val[8] for val in guild_raid_details[:-1]]
+    guild_labels = [val[6].strftime("%m/%b/%Y") for val in guild_raid_details]
+    guild_values = [val[2] for val in guild_raid_details]
+    guild_avg = [val[3] for val in guild_raid_details]
+    guild_names = [val[8] for val in guild_raid_details]
     guild_total = sum(guild_values)
     for raids in event_details[0][::-1]:
         total_raid_dmg += raids[3]
