@@ -14,13 +14,17 @@ logged_in = False
 
 def init_log_service(webpass: str, url: str):
     global log_host, log_cred
-    if webpass is not None and (url is not None and url != ""):
-        log_cred["webpass"] = webpass
-        log_host = url
-        logger_login()
+    if website_config["USE_LOGGER"]:
+        if webpass is not None and (url is not None and url != ""):
+            log_cred["webpass"] = webpass
+            log_host = url
+            logger_login()
+        else:
+            print_verbose(sender=__name__,
+                          message="Logger Password or URL is missing! Log service disabled", color="red")
+            website_config["USE_LOGGER"] = False
     else:
-        print_verbose(sender=__name__, message="Logger Password or URL is missing! Log service disabled", color="red")
-        website_config["USE_LOGGER"] = False
+        print_verbose(sender=__name__, message="Opted-out of using a Logger service", color="yellow")
 
 
 def log_success(comment="Not Specified", body=None):

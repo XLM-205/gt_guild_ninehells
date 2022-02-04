@@ -1,0 +1,61 @@
+{% extends "base_layout.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+          <div class="card">
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+              {% endwith %}
+              <div class="card-header bg-warning">Change Password</div>
+              <form method="POST" action="{{ url_for('main.profile_page_post') }}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="passCurrent">Current Password</label>
+                        <input type="password" name="passCurrent" class="form-control" id="passCurrent" placeholder="Current Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="passNew">New Password</label>
+                        <input type="password" name="passNew" class="form-control" id="passNew" placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="passConfirm">Confirm Password</label>
+                        <input type="password" name="passConfirm" class="form-control" id="passConfirm" placeholder="Confirm Password">
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="hidden" name="type" value="password">
+                    <button type="submit" class="btn btn-warning">Change Password</button>
+                </div>
+
+              </form>
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+          <div class="card">
+              <div class="card-header bg-info">Send a Request</div>
+              <form method="POST" action="{{ url_for('main.profile_page_post') }}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="newRequest">I request for the moderation team:</label>
+                        <textarea class="form-control" name="newRequest" id="newRequest" placeholder="Your request"></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="hidden" name="type" value="request">
+                    <button type="submit" class="btn btn-info">Send Request</button>
+                </div>
+
+              </form>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

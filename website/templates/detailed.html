@@ -49,8 +49,8 @@
     <div class="{% if data['event_exists'] %} bg-info {% else %} bg-danger {% endif %} card-header" style="display: block">
       <div class="card-title">
           {% if data['event_exists'] %}
-            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }} <br>({% if data['event_dif'][1] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][1]) }} )</br></h3>
-            <p>Average Damage: {{ '{:,}'.format(data['event_avg']) }} <br>({% if data['event_dif'][2] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][2]) }} )</br></p>
+            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }} <br>({% if data['event_dif'][1] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][1]) }} )</h3>
+            <p>Average Damage: {{ '{:,}'.format(data['event_avg']) }} <br>({% if data['event_dif'][2] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_dif'][2]) }} )</p>
           {% else %}
             <h5>Event data doesn't exists!</h5>
           {% endif %}
@@ -66,7 +66,7 @@
   {% if data['event_exists'] %}
     <div class="card-body">
         {% for member in data['event_data'] %}
-          {% if data['user_name'] == member[0] %}
+          {% if username == member[0] %}
             <div class="bg-success callout callout-success">
               <h5>{{ loop.index }}º {{ member[0] }} (That's you!)</h5>
           {% elif member[1] > 0 %}

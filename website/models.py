@@ -1,3 +1,5 @@
+import datetime
+
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
@@ -62,7 +64,7 @@ def query_events_detailed_user(user_id: int):
     (0- User ID, 1- Event ID, 2- Event type, 3- User damage, 4- average damage, 5- total damage, 6- rank position,
     7- event's name, 8- when the event ended, 9- User's Damage difference from last, 10- Guild's Damage Proportion,
     11- User's Damage Proportion) in order of newest first
-    (filtering that, if a Null is found, it's replaced with 0)
+    (replacing Nulls with 0)
     or a list with two empty lists inside if there are no entries
     """
     cmd = text(f"SELECT * FROM GetAllEventsDetailed WHERE id_membro = {user_id} ORDER BY id_evento DESC;")
@@ -202,3 +204,32 @@ def query_progression_user(user_id: int):
         return []
     else:
         return raid_data
+
+
+def query_latest_announcement():
+    """
+    Query for the latest published announcement
+    :return: A tuple that contains (Announcement ID, User, Date, Announcement, Title) if there are new announcements.
+    If there are not, return an empty tuple
+    """
+    cmd = text(f"SELECT * FROM GetLatestAnnouncement;")
+    announcement = db.session.execute(cmd).first()
+    if announcement is None or announcement == ():
+        return ()
+    else:
+        return announcement
+
+
+def query_change_webpass(user: int, wp: str):
+    cmd = text(f"SELECT changeWebpass({user}, '{wp}')")
+    db.session.execute("COMMIT")  # Required to end past transactions
+    db.session.execute(cmd)
+    query_send_request(user, f"Changed password on {datetime.datetime.today()}", active=False)
+
+
+def query_send_request(user: int, request: str, active: bool = True):
+    cmd = text(f"INSERT INTO pedido(id_membro, data, descricao, ativo) "
+               f"VALUES ({user}, '{datetime.datetime.today().date()}', '{request}', {active})")
+    db.session.execute("COMMIT")
+    db.session.execute(cmd)
+    pass

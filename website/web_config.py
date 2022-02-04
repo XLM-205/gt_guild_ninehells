@@ -5,6 +5,7 @@ from datetime import datetime
 website_config = {"PRE_INIT": [],        # Stuff to do before initialization
                   "POST_INIT": [],       # Stuff to do after initialization
                   "USE_LOGGER": True,    # If True, use the logger service
+                  "USE_HOOK": True,      # If True, use webhooks (Discord)
                   "VERBOSE": False}
 
 # Default values used within the server. Changing them during runtime is NOT RECOMMENDED
@@ -25,7 +26,7 @@ defaults = {"CONSOLE": {"SERVER_BOOT": "white",  # Console Color code for each m
             "REQUEST": {"TIMEOUT": 3},      # Time, in seconds, before a GET request is ignored
             "LOGGER": {"PROVIDER": "https://rdm-gen-logserver.herokuapp.com/",  # Logger url
                        "REQUIRE_LOGIN": True},                                  # The logger require a valid login?
-            "INTERNAL": {"VERSION": "0.8.2",    # Server's Version
+            "INTERNAL": {"VERSION": "0.9.0",    # Server's Version
                          "ACCESS_POINT": "http://gt-ninehells-guild.herokuapp.com/",  # Website's url
                          "WEB_NAME": "GT Guild Webpage"}}    # Website's name internally and on entries
 

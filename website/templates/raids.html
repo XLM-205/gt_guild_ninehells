@@ -1,0 +1,123 @@
+{% extends "base_layout.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="card">
+    <div class="card-header bg-success">
+        <h3 class="card-title">Raids</h3>
+    </div>
+    <div class="card-body">
+
+        <div class="card">
+            <div class="card-header bg-success">
+                <h3 class="card-title">Guild Improvement</h3>
+            </div>
+            <div class="card-body"> <!-- GRAPH AREA -->
+                 <div class="callout callout-success">
+                    <h5>Accumulated Damage: {{ '{:,}'.format(data['progress_guild']['total']) }}</h5>
+                    <p>Average Damage: {{ '{:,}'.format(data['progress_guild']['avg'][-1]) }}</p>
+                </div>
+                <canvas id="line-chart-guild-progress" height="100">
+                    <script>
+                        var context = document.getElementById("line-chart-guild-progress").getContext("2d")
+                        var lineChart = new Chart(context, {
+                            type: "line",
+                            data: {
+                                labels: {{ data['progress_guild']['labels'] | safe }},
+                                datasets: [
+                                    {
+                                        label: "Guild's Damage",
+                                        data: {{ data['progress_guild']['values'] | safe }},
+                                        fill: true,
+                                        borderColor: "rgb(0, 170, 20)",
+                                    },
+                                    {
+                                        label: "Guild's Average",
+                                        data: {{ data['progress_guild']['avg'] | safe }},
+                                        borderColor: "rgb(255, 127, 0)",
+
+                                    }
+                                ]
+                            }
+                        });
+                    </script>
+                </canvas>
+            </div>
+        </div>
+
+        {% if data['raid_data'] %}
+        {% for raid in data['raid_data'] %}
+        <div class="card card-success card-outline">
+            <div class="card-header" style="display: block">
+                <h5 class="card-title">
+                    {{ raid[7] }} - {{ raid[6] }}º ({{ raid[8] }})
+                </h5>
+                <div class="card-tools">
+                    <a href="{{ url_for('main.detailed', event_id=raid[1]) }}">
+                        <button type="button" class="btn btn-block btn-outline-primary">
+                            Details
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="callout callout-success">
+                        <h5>Total Guild Damage: {{ '{:,}'.format(raid[5]) }}</h5>
+                        <p>Average Guild Damage: {{ '{:,}'.format(raid[4]) }}</p>
+                        </div>
+                        <div class="{% if raid[9] >= 0 %}bg-success callout-success{% else %} bg-warning callout-warning{% endif %} callout ">
+                            You did <b>{{ '{:,}'.format(raid[3]) }} damage</b> ({% if raid[9] >= 0 %}+{% endif %}{{ '{:,}'.format(raid[9]) }})
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <canvas id="pie-chart-raid-{{ loop.index }}" height="50">
+                            <script>
+                                var context = document.getElementById("pie-chart-raid-{{ loop.index }}").getContext("2d")
+                                var lineChart = new Chart(context, {
+                                    type: "doughnut",
+                                    data: {
+                                        labels: ["Guild ({{ raid[10] }}%)", "You ({{ raid[11] }}%)"],
+                                        datasets: [
+                                            {
+                                                label: "Damage Distribution",
+                                                data: [
+                                                    {{ ((raid[5] - raid[3]) ) | safe  }},
+                                                    {{ (raid[3]) | safe  }}
+                                                ],
+                                                backgroundColor: ["rgb(3, 182, 252)", "rgb(0, 170, 20)"],
+                                                hoverOffset: 10,
+                                            }
+                                        ]
+                                    }
+                                });
+                            </script>
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <!-- No Raid Data -->
+        <div class="card">
+            <div class="bg-warning card-header">
+                <div class="card-title">
+                    <h5>Oops! Looks like someone is new here! (Welcome btw!)</h5>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="callout callout-success">
+                    <h5>Just keep it up and soon there will be some raid data to display here ;)</h5>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+
+{% endblock %}
