@@ -69,8 +69,9 @@ def prepare_stats_data() -> dict:
         user_names[0].append(raids[7])
         user_values[0].append(raids[3])
         valid_events[0].append(raids)
-    global_avg[0] = int(total_dmg[0] / attendances[0])
-    daily_avg[0] = int(daily_avg[0] / attendances[0])
+    if attendances[0] > 0:
+        global_avg[0] = int(total_dmg[0] / attendances[0])
+        daily_avg[0] = int(daily_avg[0] / attendances[0])
     # Data regarding meteors
     for meteors in event_details[1][::-1]:
         if meteors[3] == 0:
@@ -83,8 +84,9 @@ def prepare_stats_data() -> dict:
         user_names[1].append(meteors[7])
         user_values[1].append(meteors[3])
         valid_events[1].append(meteors)
-    global_avg[1] = int(total_dmg[1] / attendances[1])
-    daily_avg[1] = int(daily_avg[1] / attendances[1])
+    if attendances[1] > 0:
+        global_avg[1] = int(total_dmg[1] / attendances[1])
+        daily_avg[1] = int(daily_avg[1] / attendances[1])
     data = {
         "join_date": (current_user.data.strftime("%m/%b/%Y"),
                       (datetime.today().date() - current_user.data).days),
