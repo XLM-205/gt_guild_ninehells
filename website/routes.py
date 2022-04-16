@@ -23,7 +23,7 @@ def send_to_webhook(msg: str = "Empty Message"):
         discord_hook = {
             "id": "Website Hook",
             "type": 1,
-            "content": f"[{datetime.today().strftime('%m/%b/%Y %H:%M:%S.%f')}][{current_user.nome}] > {msg}",
+            "content": f"[{datetime.today().strftime('%m/%b/%Y %H:%M:%S')}][{current_user.nome}] > {msg}",
         }
         requests.post(tgt, json=discord_hook)
 
@@ -252,6 +252,7 @@ def login_post():
     remember = True if request.form.get("remember") else False
     code = attempt_login(log_in, wp, flask.request.remote_addr, remember=remember)
     if code == 200:
+        send_to_webhook(f"({flask.request.remote_addr}) logged in successfully")
         return redirect(url_for("main.dashboard"))
     else:
         return redirect(url_for("auth.login"))
@@ -260,5 +261,6 @@ def login_post():
 @auth.route("/logout", methods=['GET'])
 @login_required
 def logout():
+    send_to_webhook("Requested a log out")
     logout_user()
     return redirect(url_for("auth.login"))

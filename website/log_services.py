@@ -13,6 +13,11 @@ logged_in = False
 
 
 def init_log_service(webpass: str, url: str):
+    """
+    Initializes a Log Server session
+    :param webpass: The service password
+    :param url: The target Logger provider
+    """
     global log_host, log_cred
     if website_config["USE_LOGGER"]:
         if webpass is not None and (url is not None and url != ""):
