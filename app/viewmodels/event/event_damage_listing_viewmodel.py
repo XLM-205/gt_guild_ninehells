@@ -1,9 +1,9 @@
 from  datetime import datetime
 from typing import List
 from uuid import UUID
-from app.models.enums.event_types import EventTypeEnum
-from app.viewmodels.event.event_listing_viewmodel import EventListingViewModel
-from app.viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
+from models.enums.event_types import EventTypeEnum
+from viewmodels.event.event_listing_viewmodel import EventListingViewModel
+from viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
 
 
 class EventDamageListingViewModel(EventListingViewModel):

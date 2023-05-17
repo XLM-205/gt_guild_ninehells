@@ -1,5 +1,5 @@
 from uuid import UUID
-from app.models.enums.event_types import EventTypeEnum
+from models.enums.event_types import EventTypeEnum
 
 class MemberTotalDamageViewModel:
     member_id: UUID

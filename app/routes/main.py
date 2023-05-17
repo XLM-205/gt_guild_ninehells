@@ -3,18 +3,18 @@ import json
 import flask
 
 from http import HTTPStatus
-from app.db.queries.announcement_queries import query_announcement_latest
-from app.db.queries.request_queries import query_send_request
-from app.db.queries.service_queries import query_change_webpass
-from app.models.members import Members
-from app.services.fetchers.fetch_dashboard_data import fetch_dashboard_data
-from app.services.fetchers.fetch_raid_list_data import fetch_raid_list_data
-from app.services.login import logged_user
+from db.queries.announcement_queries import query_announcement_latest
+from db.queries.request_queries import query_send_request
+from db.queries.service_queries import query_change_webpass
+from models.members import Members
+from services.fetchers.fetch_dashboard_data import fetch_dashboard_data
+from services.fetchers.fetch_raid_list_data import fetch_raid_list_data
+from services.login import logged_user
 from flask import redirect, render_template, Blueprint, request, url_for
 from flask_login import login_required
 from werkzeug.wrappers.response import Response
 
-from app.services.hooks.webhook import send_to_webhook
+from services.hooks.webhook import send_to_webhook
 
 main = Blueprint("main", __name__)
 

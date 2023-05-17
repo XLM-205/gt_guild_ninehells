@@ -1,5 +1,5 @@
 from typing import List
-from app.config.app_defaults import app_defaults
+from config.app_defaults import app_defaults
 
 
 class InjectionToken(Exception):

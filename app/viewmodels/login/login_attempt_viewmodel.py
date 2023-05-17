@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from app.models.enums.member_roles import MemberRoleEnum
+from models.enums.member_roles import MemberRoleEnum
 
 class LoginAttemptViewModel:
     tries: int = 0

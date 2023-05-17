@@ -5,8 +5,8 @@ from flask import render_template, Blueprint, request, url_for
 from flask_login import login_required, logout_user
 from werkzeug.utils import redirect
 from werkzeug.wrappers.response import Response
-from app.services.hooks.webhook import send_to_webhook
-from app.services.login import attempt_login
+from services.hooks.webhook import send_to_webhook
+from services.login import attempt_login
 
 
 auth = Blueprint("auth", __name__)

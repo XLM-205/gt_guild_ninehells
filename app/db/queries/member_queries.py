@@ -1,11 +1,11 @@
 from typing import List
 from uuid import UUID
 
-from app.db.db import db
+from db.db import db
 from sqlalchemy import text
-from app.models.enums.event_types import EventTypeEnum
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
-from app.viewmodels.member.member_total_damage_viewmodel import MemberTotalDamageViewModel
+from models.enums.event_types import EventTypeEnum
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from viewmodels.member.member_total_damage_viewmodel import MemberTotalDamageViewModel
 
 def query_member_total_damage_of_event_type(member_id: UUID, event_type: EventTypeEnum) -> MemberTotalDamageViewModel:
     """ Queries a member's total damage and amount of events attended for the given event id

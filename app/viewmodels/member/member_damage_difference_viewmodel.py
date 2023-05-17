@@ -1,4 +1,4 @@
-from app.viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
+from viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
 
 
 class MemberDamageDifferenceViewModel(MemberDamageViewModel):

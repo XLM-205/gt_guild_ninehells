@@ -1,10 +1,10 @@
 
 from datetime import datetime
 from typing import List
-from app.services.login import logged_user
-from app.db.queries.event_queries import query_guild_event_summary
-from app.models.enums.event_types import EventTypeEnum
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from services.login import logged_user
+from db.queries.event_queries import query_guild_event_summary
+from models.enums.event_types import EventTypeEnum
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
 
 
 def fetch_dashboard_data() -> dict:

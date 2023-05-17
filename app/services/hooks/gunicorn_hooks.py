@@ -1,8 +1,8 @@
 import os
-from app.utils.printer import print_verbose
+from utils.printer import print_verbose
 
 from services.log import logger_logout
-from app.config.app_configs import app_configs
+from config.app_configs import app_configs
 
 app_configs['VERBOSE'] = True
 

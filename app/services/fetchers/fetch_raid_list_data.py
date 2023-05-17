@@ -1,12 +1,12 @@
 
 from datetime import datetime
 from typing import List
-from app.models.enums.event_types import EventTypeEnum
-from app.services.login import logged_user
+from models.enums.event_types import EventTypeEnum
+from services.login import logged_user
 
-from app.db.queries.event_queries import query_guild_event_listing, query_total_damage_of_event_type
-from app.viewmodels.event.event_summary_viewmodel import EventSummaryViewModel
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from db.queries.event_queries import query_guild_event_listing, query_total_damage_of_event_type
+from viewmodels.event.event_summary_viewmodel import EventSummaryViewModel
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
 
 
 def fetch_raid_list_data():

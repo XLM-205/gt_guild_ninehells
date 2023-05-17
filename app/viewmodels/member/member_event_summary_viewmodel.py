@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from app.models.enums.event_types import EventTypeEnum
+from models.enums.event_types import EventTypeEnum
 
 class MemberEventSummaryViewModel:
     event_id: UUID

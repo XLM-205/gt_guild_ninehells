@@ -1,6 +1,6 @@
 from typing import List
-from app.viewmodels.event.event_listing_viewmodel import EventListingViewModel
-from app.viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
+from viewmodels.event.event_listing_viewmodel import EventListingViewModel
+from viewmodels.member.member_damage_viewmodel import MemberDamageViewModel
 
 
 class EventDetailedViewModel:

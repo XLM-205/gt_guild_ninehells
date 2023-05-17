@@ -1,9 +1,9 @@
 import datetime
 from uuid import UUID
 
-from app.db.db import db
+from db.db import db
 from sqlalchemy import text
-from app.db.queries.request_queries import query_send_request
+from db.queries.request_queries import query_send_request
 
 
 def query_change_webpass(member_id: UUID, wp: str) -> None:

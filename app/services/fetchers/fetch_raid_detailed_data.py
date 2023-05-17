@@ -1,11 +1,11 @@
 
 from datetime import datetime
 from uuid import UUID
-from app.models.enums.event_types import EventTypeEnum
-from app.services.login import logged_user
-from app.db.queries.event_queries import query_event_data_and_before_same_type_as, query_event_detailed_with_difference, query_guild_event_summary
-from app.utils.formatters import format_abbreviated_number
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from models.enums.event_types import EventTypeEnum
+from services.login import logged_user
+from db.queries.event_queries import query_event_data_and_before_same_type_as, query_event_detailed_with_difference, query_guild_event_summary
+from utils.formatters import format_abbreviated_number
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
 
 
 def fetch_raid_detailed_data(event_id: UUID):

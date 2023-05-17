@@ -1,14 +1,14 @@
 from typing import List
 from uuid import UUID
 
-from app.db.db import db
+from db.db import db
 from flask_login import UserMixin
 from sqlalchemy import text, UUID
-from app.db.queries.event_queries import query_all_events_detailed_for_member, query_event_last_difference_member
-from app.db.queries.member_queries import query_member_progression, query_member_total_damage_of_event_type
-from app.models.enums.event_types import EventTypeEnum
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
-from app.viewmodels.member.member_total_damage_viewmodel import MemberTotalDamageViewModel
+from db.queries.event_queries import query_all_events_detailed_for_member, query_event_last_difference_member
+from db.queries.member_queries import query_member_progression, query_member_total_damage_of_event_type
+from models.enums.event_types import EventTypeEnum
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from viewmodels.member.member_total_damage_viewmodel import MemberTotalDamageViewModel
 
 class Members(UserMixin, db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True)

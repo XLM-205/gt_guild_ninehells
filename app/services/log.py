@@ -5,9 +5,9 @@ from requests.models import Response
 import requests
 
 from pathlib import Path
-from app.config.app_configs import app_configs
-from app.config.app_defaults import app_defaults
-from app.utils.printer import print_verbose
+from config.app_configs import app_configs
+from config.app_defaults import app_defaults
+from utils.printer import print_verbose
 
 # We need to keep the session alive to used a logged client on the log service
 logger_session = requests.Session()

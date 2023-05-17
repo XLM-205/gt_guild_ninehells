@@ -1,14 +1,14 @@
 from typing import List, Tuple
 from uuid import UUID
 
-from app.db.db import db
+from db.db import db
 from sqlalchemy import text
-from app.models.enums.event_types import EventTypeEnum
-from app.viewmodels.event.event_damage_listing_viewmodel import EventDamageListingViewModel
-from app.viewmodels.event.event_listing_viewmodel import EventListingViewModel
-from app.viewmodels.event.event_summary_viewmodel import EventSummaryViewModel
-from app.viewmodels.member.member_damage_difference_viewmodel import MemberDamageDifferenceViewModel
-from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
+from models.enums.event_types import EventTypeEnum
+from viewmodels.event.event_damage_listing_viewmodel import EventDamageListingViewModel
+from viewmodels.event.event_listing_viewmodel import EventListingViewModel
+from viewmodels.event.event_summary_viewmodel import EventSummaryViewModel
+from viewmodels.member.member_damage_difference_viewmodel import MemberDamageDifferenceViewModel
+from viewmodels.member.member_event_summary_viewmodel import MemberEventSummaryViewModel
 
 
 def query_all_events_detailed_for_member(member_id: UUID) -> List[List[MemberEventSummaryViewModel]]:     

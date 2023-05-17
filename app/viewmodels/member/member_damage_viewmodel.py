@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from app.models.enums.member_roles import MemberRoleEnum
+from models.enums.member_roles import MemberRoleEnum
 
 class MemberDamageViewModel:
     id: UUID

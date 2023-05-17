@@ -1,9 +1,9 @@
 import os
 import requests
 
-from app.config.app_configs import app_configs
+from config.app_configs import app_configs
 from datetime import datetime
-from app.services.login import logged_user
+from services.login import logged_user
 
 def send_to_webhook(msg: str = "Empty Message") -> None:
     if app_configs["USE_HOOK"] and os.environ.get("WEBHOOK") is not None:

@@ -1,16 +1,18 @@
 import os
+import sys
+
 
 from flask import Flask
 from flask_sslify import SSLify
 from sassutils.wsgi import SassMiddleware
 
-from app.db.db import init_db
-from app.routes.blueprints import init_blueprints
-from app.services.login import init_login_manager
-from app.utils.printer import print_verbose
-from app.services.signal_manager import SignalManager
-from app.config.app_configs import app_configs
-from app.config.app_defaults import app_defaults
+from db.db import init_db
+from routes.blueprints import init_blueprints
+from services.login import init_login_manager
+from utils.printer import print_verbose
+from services.signal_manager import SignalManager
+from config.app_configs import app_configs
+from config.app_defaults import app_defaults
 
 
 def sigterm_catcher() -> None:
@@ -69,7 +71,6 @@ def build_app() -> Flask:
 
     print_verbose(sender=__name__, color="green", message="Initialization complete!")
     return app
-
 
 if __name__ == "__main__":
     main()

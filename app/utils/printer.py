@@ -1,7 +1,7 @@
 import os
 
-from app.config.app_configs import app_configs
-from app.config.app_defaults import app_defaults
+from config.app_configs import app_configs
+from config.app_defaults import app_defaults
 from datetime import datetime
 
 def print_verbose(sender: str, message: str, color: str = "", bold: bool = False, underline: bool = False, force: bool = False) -> None:

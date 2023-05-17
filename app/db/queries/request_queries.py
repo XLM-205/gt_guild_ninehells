@@ -1,7 +1,7 @@
 import datetime
 from uuid import UUID
 
-from app.db.db import db
+from db.db import db
 from sqlalchemy import text
 
 

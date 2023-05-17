@@ -8,11 +8,11 @@ from datetime import datetime, timedelta
 from flask import Flask, flash
 from flask_login import LoginManager, current_user, login_user
 from sqlalchemy.exc import ProgrammingError, NoSuchColumnError
-from app.models.members import Members
-from app.services.injection_guard import InjectionToken, injection_guard
-from app.config.app_defaults import app_defaults
-from app.services.log import log_attention, log_critical, log_error, log_success, log_warning
-from app.viewmodels.login.login_attempt_viewmodel import LoginAttemptViewModel
+from models.members import Members
+from services.injection_guard import InjectionToken, injection_guard
+from config.app_defaults import app_defaults
+from services.log import log_attention, log_critical, log_error, log_success, log_warning
+from viewmodels.login.login_attempt_viewmodel import LoginAttemptViewModel
 
 # Holds all ips that tried to connect "{IP}": [tries: int, locked: bool, lock_until: datetime]
 # TODO A way for Gunicorn share this across all workers

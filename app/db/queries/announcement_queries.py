@@ -1,8 +1,8 @@
 
-from app.db.db import db
+from db.db import db
 from sqlalchemy import text
 
-from app.viewmodels.announcement.announcement_viewmodel import AnnouncementViewModel
+from viewmodels.announcement.announcement_viewmodel import AnnouncementViewModel
 
 def query_announcement_latest() -> AnnouncementViewModel:
     """ Query for the latest published announcement
