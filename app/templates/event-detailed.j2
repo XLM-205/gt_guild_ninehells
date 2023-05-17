@@ -1,0 +1,88 @@
+{% extends "base_layout.j2" %}
+
+{% block content %}
+  {% if data['event_exists'] %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <h1 class="title">Details of the {{ data['event_type'] }}: {{ data['event_name'] }}</h1>
+    <h2 class="subtitle">
+      {{ data['event-type'] }} ended on {{ data['event_end_date'] }}
+      {% if data['event_rank_matters'] %} and we finished on
+        <b>{{ data['event_position'] }}º rank</b>
+        {% if data['event_position_difference'] < 0 %} (<b class="accented-bold-good">▲ {{ data['event_position_difference'] }} </b>)
+        {% elif data['event_position_difference'] > 0 %} (<b class="accented-bold-bad">▼ {{ data['event_position_difference'] }} </b>)
+        {% endif %}
+      {% endif %}
+    </h2>
+
+    <div class="card">
+      <div class="card-header bg-secondary">
+        <h3 class="card-title">Damage Distribution</h3>
+      </div>
+
+      <div class="card-body"> {# GRAPH AREA #}
+          <canvas id="line-chart-distribution" height="100">
+             <script>
+                var context = document.getElementById("line-chart-distribution").getContext("2d")
+                var lineChart = new Chart(context, {
+                    type: "line",
+                    data: {
+                        labels: {{ data['distribution']['labels'] | safe }},
+                        datasets: [
+                            {
+                                label: "Members",
+                                data: {{ data['distribution']['values'] | safe }},
+                                fill: true,
+                                borderColor: "rgb(0, 170, 20)",
+                            },
+                        ]
+                    },
+                    lineAtIndex: [{{ data['distribution']['user_value'] | safe }}],
+                });
+            </script>
+          </canvas>
+      </div>
+    </div>
+
+  {% endif %}
+  <div class="card">
+    <div class="{% if data['event_exists'] %} bg-info {% else %} bg-danger {% endif %} card-header" style="display: block">
+      <div class="card-title">
+          {% if data['event_exists'] %}
+            <h3>Total Damage: {{ '{:,}'.format(data['event_total']) }} <br>({% if data['event_damage_difference'] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_damage_difference']) }} )</h3>
+            <p>Average Damage: {{ '{:,}'.format(data['event_average']) }} <br>({% if data['event_average_difference'] >= 0 %}+{% endif %} {{ '{:,}'.format(data['event_average_difference']) }} )</p>
+          {% else %}
+            <h5>Event data doesn't exists!</h5>
+          {% endif %}
+      </div>
+      <div class="card-tools">
+        <a href="{{ url_for('main.dashboard')}}">
+          <button type="button" class="btn btn-block btn-default">Return</button>
+        </a>
+      </div>
+    </div>
+
+
+  {% if data['event_exists'] %}
+    <div class="card-body">
+        {% for member in data['event_member_data'] %}
+          {% if user_id == member['id'] %}
+            <div class="bg-success callout callout-success">
+              <h5>{{ loop.index }}º {{ member['name'] }} (That's you!)</h5>
+          {% elif member['good_improvement'] %}
+            <div class="callout callout-success">
+              <h5>{{ loop.index }}º {{ member['name'] }}</h5>
+          {% elif member['damage'] > 0 %}
+            <div class="callout callout-warning">
+              <h5>{{ loop.index }}º {{ member['name'] }}</h5>
+          {% else %}
+            <div class="callout callout-danger">
+              <h5>{{ loop.index }}º {{ member['name'] }}</h5>
+          {% endif %}
+              <p>Damage: {{ '{:,}'.format(member['damage']) }}</p>
+            </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+  </div>
+{% endblock %}

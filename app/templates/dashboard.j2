@@ -1,0 +1,101 @@
+{% extends "base_layout.j2" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.scss.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h1 class="title">Welcome, {{ username }}!</h1>
+<h2 class="subtitle">Website in development! Please wait!</h2>
+
+<div class="card">
+    <div class="card-header bg-warning">
+        <h3>Announcements</h3>
+    </div>
+    <div class="card-body">
+        {% if announcement['exists'] %}
+            <h2>{{ announcement['title'] }}</h2>
+            <h4>By <b class="accented-bold-good">{{ announcement['member_name'] }}</b> on {{ announcement['create_date'] }}</h4>
+            <p>{{ announcement['description'] }}</p>
+        {% else %}
+            <p>There are no announcements currently</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-secondary">
+        <h3 class="card-title">{{ username }}'s Summary</h3>
+    </div>
+    <div class="card-body">
+        <div class="callout callout-success">
+            <h4>You joined our guild on <b class="accented-bold-good">{{ data['admission_date'] }}</b></h4>
+            <p>That's <b class="accented-bold-good"> {{ data['days_since_admission'] }}</b> days ago!</p>
+        </div>
+        <div class="callout callout-success">
+            {% if data["raid_attendances"] > 0 %}
+                <h4>Your Total Raid Damage is <b class="accented-bold-good">{{ '{:,}'.format(data['member_raid_total_damage']) }} in {{ data['raid_attendances'] }} Raids</b></h4>
+                <h5>With an average Damage of <b class="accented-bold-good">{{ '{:,}'.format(data['member_all_raids_average']) }}</b> per Raid!</h5>
+                <p>Roughly <b class="accented-bold-good">{{ '{:,}'.format(data['member_raid_daily_average']) }}</b> daily!</p>
+            {% else %}
+                <h4>We don't have any raid data yet! Welcome to the Guild, by the way!</h4>
+            {% endif %}
+        </div>
+        {# <div class="callout callout-success">
+            <h4>You also excavated <b class="accented-bold-good">{{ '{:,}'.format(data['total_damage'][1]) }} Damage in {{ data['mine_attendances'] }} Meteor Excavations</b></h4>
+            <h5>With an average Damage of <b class="accented-bold-good">{{ '{:,}'.format(data['global_averages'][1]) }}</b> per Meteor!</h5>
+            <p>Roughly <b class="accented-bold-good">{{ '{:,}'.format(data['daily_averages'][1]) }}</b> daily!</p>
+        </div> #}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-secondary">
+        <h3 class="card-title">{{ username }}'s Improvement</h3>
+    </div>
+
+    
+    <div class="card-body"> {# GRAPH AREA #}
+        <div class="row">
+            <div class="col">
+                <div class="bg-success callout callout-success">
+                    <p>Raid Damage Progression</p>
+                </div>
+
+                <div class="chart-container">
+                {% if data["raid_attendances"] > 0 %}
+                    <canvas id="line-chart-member-progress-raid" height="100">
+                        <script>
+                            var context = document.getElementById("line-chart-member-progress-raid").getContext("2d")
+                            var lineChart = new Chart(context, {
+                                type: "line",
+                                data: {
+                                    labels: {{ data['progress_member']['labels'] | safe }},
+                                    datasets: [
+                                        {
+                                            label: "Your Damage",
+                                            data: {{ data['progress_member']['damages'] | safe }},
+                                            fill: true,
+                                            borderColor: "rgb(0, 170, 20)",
+                                            lineTension: 0.1,
+                                        },
+                                        {
+                                            label: "Guild's Average",
+                                            data: {{ data['progress_guild']['averages'] | safe }},
+                                            borderColor: "rgb(255, 127, 0)",
+                                            lineTension: 0.1,
+                                        }
+                                    ]
+                                }
+                            });
+                        </script>
+                    </canvas>
+                {% else %}
+                    <h6 class="centralized">- NO DATA -</h6>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+
+{% endblock %}
