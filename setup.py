@@ -1,5 +1,5 @@
 from setuptools import setup
-from app.config.app_defaults import app_defaults
+from config.app_defaults import app_defaults
 
 setup(
     name="guild_docker",
