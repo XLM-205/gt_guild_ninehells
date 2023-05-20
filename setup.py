@@ -9,7 +9,7 @@ setup(
     license="GNU",
     install_requires=["flask",    "flask-sqlalchemy", "flask-login", "flask-sslify",
                       "requests", "werkzeug",         "sqlalchemy",  "gunicorn",
-                      "psycopg2", "libsass"],
+                      "libsass",  "psycopg2-binary"],
     entry_points={
         "console_scripts": [
             "run_webpage=app:main"
