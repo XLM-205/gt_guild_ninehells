@@ -32,7 +32,6 @@ def query_member_progression(member_id: int) -> List[MemberEventSummaryViewModel
     entries = db.session.execute(cmd).all()
     if entries is not None and len(entries) > 0:
         summary = [entry for entry in entries]
-        # for entry in entries:
-        #     summary.append(entry)
+
     return summary
             

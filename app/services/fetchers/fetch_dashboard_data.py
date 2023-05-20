@@ -10,7 +10,7 @@ from app.viewmodels.member.member_event_summary_viewmodel import MemberEventSumm
 def fetch_dashboard_data() -> dict:
     # Query all events
     member_event_details: List[List[MemberEventSummaryViewModel]] = logged_user.fetch_all_events()
-    #member_event_details[0] = []
+    # member_event_details[0] = []
     guild_raid_summaries = query_guild_event_summary(EventTypeEnum.Raid)
     
     # Damage and graph data
@@ -49,21 +49,7 @@ def fetch_dashboard_data() -> dict:
     if member_raid_attendances > 0:
         member_all_raids_average = int(member_raid_total_damage / member_raid_attendances)
         member_raid_daily_average = int(member_raid_daily_average / member_raid_attendances)
-    # Data regarding meteors
-    # for meteors in event_details[1][::-1]:
-    #     if meteors[3] == 0:
-    #         member_raid_attendances -= 1
-    #         continue
-    #     member_total_damage += meteors[3]
-    #     member_raid_daily_average += meteors[3] / event_duration
-    #     member_labels[1].append(meteors[8].strftime("%d/%b/%Y"))
-    #     member_average[1].append(meteors[4])
-    #     member_names[1].append(meteors[7])
-    #     member_values[1].append(meteors[3])
-    #     # valid_events[1].append(meteors)
-    # if member_raid_attendances[1] > 0:
-    #     member_all_raids_average[1] = int(member_total_damage[1] / member_raid_attendances[1])
-    #     member_raid_daily_average[1] = int(member_raid_daily_average[1] / member_raid_attendances[1])
+  
     data = {
         "admission_date": logged_user.admissiondate.strftime("%d/%b/%Y"),
         "days_since_admission": (datetime.today().date() - logged_user.admissiondate).days,
@@ -71,9 +57,6 @@ def fetch_dashboard_data() -> dict:
         "member_all_raids_average": member_all_raids_average,
         "member_raid_daily_average": member_raid_daily_average,
         "raid_attendances": member_raid_attendances,
-        #"mine_attendances": member_raid_attendances[1],
-        #"raid_data": event_details[0],
-        # "mine_data": event_details[1],
         "progress_guild": {
             "labels": guild_labels, "damages": guild_damage, "averages": guild_average
         },

@@ -44,8 +44,5 @@ class Members(UserMixin, db.Model):
     def fetch_all_events(self) -> List[List[MemberEventSummaryViewModel]]:
         return query_all_events_detailed_for_member(self.id)
 
-    # def fetch_event_last_difference(self, event_id: UUID):
-    #     return query_event_last_difference_member(self.id, event_id)
-    
     def fetch_member_progression(self) -> List[MemberEventSummaryViewModel]:
         return query_member_progression(self.id)

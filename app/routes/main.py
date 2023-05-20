@@ -1,4 +1,3 @@
-
 import json
 import flask
 
@@ -22,63 +21,6 @@ main = Blueprint("main", __name__)
 @login_required
 def index() -> Response:
     return redirect(url_for('main.dashboard'))
-
-
-# @main.route("/details/<uuid:event_id>", methods=['GET'])
-# @login_required
-# def detailed(event_id):
-#     event_details = query_event_detailed_with_difference(event_id)
-#     dist_labels = []
-#     dist_values = []
-#     damage_label = 0
-#     member_damage = 0
-#     rank_matters = True
-
-#     sections = len(event_details.member_damage)
-#     top_damage = event_details.member_damage[0].damage
-#     step = int(top_damage / sections)   # [0] Because it's ordered as the higher damage first
-#     labels = list(range(0, top_damage, step))
-#     labels[-1] = top_damage
-#     member_list = event_details.member_damage[::-1]
-#     continue_from = 0
-#     for dist in labels:
-#         count = 0
-#         for member in member_list[continue_from:]:
-#             if member.id == logged_user.id:
-#                 member_damage = member.damage
-#                 damage_label = dist
-#             if member.damage <= dist:
-#                 count += 1
-#                 continue_from += 1
-#             else:
-#                 break
-
-#         dist_values.append(count)
-#     # Filing the labels
-#     if event_details.event_type == EventTypeEnum.Raid:
-#         for dist in labels:
-#             dist_labels.append(format_abbreviated_number(dist))
-#     elif event_details.event_type == EventTypeEnum.Mining:
-#         rank_matters = False
-#         for dist in labels:
-#             dist_labels.append(dist)
-#     data = {
-#         "event_rank_matters": rank_matters,
-#         "event_exists": event_details.exists,
-#         "event_data": event_details.member_damage,
-#         "event_avg": event_details.average_damage,
-#         "event_total": event_details.total_damage,
-#         "event_pos": event_details.position,
-#         "event_name": event_details.name,
-#         "event_date": event_details.start_date,
-#         "event_type": event_details.event_type,
-#         "event_dif": query_event_last_difference(event_id),
-#         "distribution": {
-#             "labels": dist_labels, "values": dist_values,
-#             "damage_label": damage_label, "member_damage": member_damage
-#         },
-#     }
-#     return render_template("detailed.j2", username=logged_user.name, user_id=logged_user.id, data=data), HTTPStatus.OK
 
 
 @main.route("/profile", methods=['POST'])
@@ -110,12 +52,6 @@ def profile_page_post() -> Response:
 @login_required
 def profile_page():
     return render_template("profiles.j2", username=logged_user.name), HTTPStatus.OK
-
-
-# @main.route("/meteor", methods=["GET"])
-# @login_required
-# def meteor_page():
-#     return render_template("meteors.j2", username=logged_user.name, data=prepare_stats_data()), HTTPStatus.OK
 
 
 @main.route("/raid", methods=["GET"])

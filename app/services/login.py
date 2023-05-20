@@ -35,7 +35,6 @@ def make_login(log_in, wp) -> Tuple[Members | None, str]:
     :param wp: The WebPassword
     :return: An Users object, if successful, and None if doesn't, followed by the reason:
     """
-    # noinspection PyUnresolvedReferences
     try:
         injection_guard([log_in, wp])
         member = Members.authenticate(log_in, wp)
@@ -100,8 +99,6 @@ def attempt_login(log_in, wp, ip_address, remember=False) -> HTTPStatus:
             if login_attempts[ip_address].tries >= app_defaults["SECURITY"]["LOGIN"]["MAX_TRIES"]:  # Lock user
                 lockout = datetime.now() + timedelta(seconds=app_defaults["SECURITY"]["LOGIN"]["LOCKOUT"])
                 login_attempts[ip_address].lock(lockout)
-                # login_attempts[ip_address][1] = True
-                # login_attempts[ip_address][2] = lockout
                 log_attention(comment=f"IP {ip_address} is locked until {login_attempts[ip_address].locked_until}"
                                       f" (Too many failed attempts)")
             flash("Invalid Login")
@@ -115,8 +112,6 @@ def attempt_login(log_in, wp, ip_address, remember=False) -> HTTPStatus:
         log_critical(comment=f"Uncaught exception trying to make login\n{str(exc)}")
         return HTTPStatus.BAD_REQUEST
     login_attempts[ip_address].unlock()
-    # login_attempts[ip_address][0] = 0
-    # login_attempts[ip_address][1] = False
     
     login_user(user, remember=remember)
     log_success(comment=f"{logged_user.name} ({ip_address}) logged in successfully")

@@ -12,7 +12,6 @@ setup(
                       "psycopg2", "libsass"],
     entry_points={
         "console_scripts": [
-            # <Nome do Comando>=<Modulo (Arquivo)>:<Funcao>
             "run_webpage=app:main"
         ]
     }

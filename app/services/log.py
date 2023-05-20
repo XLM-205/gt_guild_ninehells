@@ -159,7 +159,6 @@ def flood_test(amount: int, batches: int = 4) -> None:
         for t in range(batches):
             msg = f"Flood test {i + 1} / {amount}"
             print_verbose(sender=__name__, message=f"[T:{t}] {msg}", color="pink")
-            # log(severity="Information", comment=msg, threaded=False)
             threads.append(threading.Thread(target=log, args=("Information", msg, None, False)))
             threads[-1].start()
             i += 1
@@ -168,7 +167,6 @@ def flood_test(amount: int, batches: int = 4) -> None:
             t.join()
             print_verbose(sender=__name__, message=f"Done", color="green")
         threads.clear()
-        # log(severity="Information", comment=msg, threaded=False)
 
 
 def logger_logout() -> None:
