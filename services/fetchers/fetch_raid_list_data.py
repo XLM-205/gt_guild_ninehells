@@ -48,6 +48,9 @@ def fetch_raid_list_data():
         member_labels.append(member_raid_details[i].event_start_date.strftime("%d/%b/%Y"))
         member_average.append(int(member_raid_details[i].member_damage / member_raid_details[i].event_duration))
         member_damage.append(member_raid_details[i].member_damage)
+        
+    for i in range(member_attendances, len(guild_raid_listings)):
+        member_damage.append(0)
     
     if member_attendances > 0:
         member_all_average = int(member_total_damage / member_attendances)
