@@ -1,3 +1,4 @@
+import typing
 from uuid import UUID
 import flask
 import flask_login
@@ -28,7 +29,7 @@ def init_login_manager(flask_app: Flask) -> None:
     def load_user(user_id: UUID) -> Members:
         return Members.query.get(user_id)
 
-def make_login(log_in, wp) -> Tuple[Members | None, str]:
+def make_login(log_in, wp) -> Tuple[typing.Optional[Members], str]:
     """
     Tries to login, verifying first against SQL Injection attempts
     :param log_in: The login credentials (username / server url)

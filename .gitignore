@@ -3,3 +3,6 @@
 /.env
 *__pycache__
 /.vercel
+/*.venv
+/gt_guild_ninehells (Vercel 3.9).venv
+
