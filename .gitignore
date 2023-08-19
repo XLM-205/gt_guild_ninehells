@@ -5,4 +5,4 @@
 /.vercel
 /*.venv
 /gt_guild_ninehells (Vercel 3.9).venv
-
+.env

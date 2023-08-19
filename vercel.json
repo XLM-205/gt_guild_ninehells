@@ -2,8 +2,8 @@
     "version": 2,
     "builds": [
         { "src": "index.py",        "use": "@vercel/python" },
-
         { "src": "/static/*.css",   "use": "@vercel/static" },
+        { "src": "/static/*.map",   "use": "@vercel/static" },
         { "src": "/templates/*.j2", "use": "@vercel/static" }
     ],
     "routes": [

@@ -1,8 +1,6 @@
 import os
 
 from flask import Flask
-from flask_sslify import SSLify
-
 from db.db import init_db
 from routes.blueprints import init_blueprints
 from services.login import init_login_manager
